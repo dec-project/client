@@ -4,6 +4,7 @@ import HomePage from './pages/home/index';
 import SearchPage from './pages/search/index';
 import ChatsPage from './pages/chats/index';
 import TripPage from './pages/trip/index';
+import DetailPage from './pages/trip/detail/index';
 
 type routeElement = {
   path: string;
@@ -17,6 +18,7 @@ const routes: routeElement[] = [
   { path: '/search', element: <SearchPage /> },
   { path: '/chats', element: <ChatsPage /> },
   { path: '/trip/:calendarId', element: <TripPage /> },
+  { path: '/trip/:calendarId/detail', element: <DetailPage /> },
 ];
 
 export const router = createBrowserRouter(routes);
