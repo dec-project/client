@@ -4,12 +4,14 @@ import { DEFAULT_IMAGE } from './data';
 import ArrowRight from '@/common/assets/icon/icon-arrow-right.svg';
 import useMovie from '../hooks/useMovie';
 import LoadingSpinner from '@/common/components/spinner';
+import { useNavigate } from 'react-router-dom';
 
 interface MovieChartProps {
   calendarId: string;
 }
 
 const MovieChart = ({ calendarId }: MovieChartProps) => {
+  const navigate = useNavigate();
   const { data: movieData, isLoading, isError } = useMovie(calendarId);
 
   if (isLoading) {
@@ -22,12 +24,16 @@ const MovieChart = ({ calendarId }: MovieChartProps) => {
     return <div>영화 데이터를 가져오는 중 문제가 발생했습니다.</div>;
   }
 
+  const handleDetail = (movieId: number) => {
+    navigate(`/trip/${calendarId}/detail?movieId=${movieId}`);
+  };
+
   return (
     <ChartSection>
       <SectionHeader>영화 TOP 5</SectionHeader>
       <ItemList>
         {movieData.itemList.map((item: movieSummary) => (
-          <Item key={item.movieId}>
+          <Item key={item.movieId} onClick={() => handleDetail(item.movieId)}>
             <Image
               src={item.img}
               alt={`movie-${item.movieId}`}

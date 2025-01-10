@@ -4,12 +4,14 @@ import { DEFAULT_IMAGE } from './data';
 import ArrowRight from '@/common/assets/icon/icon-arrow-right.svg';
 import useMusic from '../hooks/useMusic';
 import LoadingSpinner from '@/common/components/spinner';
+import { useNavigate } from 'react-router-dom';
 
 interface MusicChartProps {
   calendarId: string;
 }
 
 const MusicChart = ({ calendarId }: MusicChartProps) => {
+  const navigate = useNavigate();
   const { data: musicData, isLoading, isError } = useMusic(calendarId);
 
   if (isLoading) {
@@ -22,12 +24,16 @@ const MusicChart = ({ calendarId }: MusicChartProps) => {
     return <div>노래 데이터를 가져오는 중 문제가 발생했습니다.</div>;
   }
 
+  const handleDetail = (musicId: number) => {
+    navigate(`/trip/${calendarId}/detail?musicId=${musicId}`);
+  };
+
   return (
     <Section>
       <SectionHeader>노래 TOP 5</SectionHeader>
       <ItemList>
         {musicData.songSummaries.map((item: musicSummary) => (
-          <Item key={item.songId}>
+          <Item key={item.songId} onClick={() => handleDetail(item.songId)}>
             <Image
               src={item.imgUrl}
               alt={`music-${item.songId}`}
