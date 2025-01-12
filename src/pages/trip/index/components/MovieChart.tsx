@@ -1,6 +1,5 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { movieSummary } from '../types';
-import { DEFAULT_IMAGE } from './data';
 import ArrowRight from '@/common/assets/icon/icon-arrow-right.svg';
 import useMovie from '../hooks/useMovie';
 import LoadingSpinner from '@/common/components/spinner';
@@ -9,32 +8,44 @@ interface MovieChartProps {
   calendarId: string;
 }
 
+// TODO: 서버 배포시 반영
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const MovieChart = ({ calendarId }: MovieChartProps) => {
-  const { data: movieData, isLoading, isError } = useMovie(calendarId);
+  const navigate = useNavigate();
+
+  const { data: movieData, isLoading, isError, error } = useMovie(calendarId);
 
   if (isLoading) {
     // TODO: 추후 로딩 페이지 추가
     return <LoadingSpinner />;
   }
 
-  if (isError || !movieData.itemList) {
-    // TODO: 추후 에러 컴포넌트 추가
-    return <div>영화 데이터를 가져오는 중 문제가 발생했습니다.</div>;
+  if (isError || !movieData?.itemList || movieData.itemList.length === 0) {
+    const errorMessage = error?.message || '영화 데이터를 가져오는 중 문제가 발생했습니다.';
+
+    return (
+      <Section>
+        <p>{errorMessage}</p>
+      </Section>
+    );
   }
 
+  const handleDetailClick = (movieId: number) => {
+    navigate(`/trip/${movieId}/detail`);
+  };
+
   return (
-    <ChartSection>
+    <Section>
       <SectionHeader>영화 TOP 5</SectionHeader>
       <ItemList>
-        {movieData.itemList.map((item: movieSummary) => (
-          <Item key={item.movieId}>
+        {movieData.itemList.map((item) => (
+          <Item key={item.movieId} onClick={() => handleDetailClick(item.movieId)}>
             <Image
-              src={item.img}
+              // TODO: 서버 배포시 반영
+              // src={`${BASE_URL}/${item.img}`}
+              src={`${item.img}`}
               alt={`movie-${item.movieId}`}
-              // TODO: 임시 기본 이미지
-              onError={(e) => {
-                e.currentTarget.src = DEFAULT_IMAGE;
-              }}
             />
             <ContentWrapper>
               <ContentTitle>
@@ -45,11 +56,11 @@ const MovieChart = ({ calendarId }: MovieChartProps) => {
           </Item>
         ))}
       </ItemList>
-    </ChartSection>
+    </Section>
   );
 };
 
-const ChartSection = styled.section`
+const Section = styled.section`
   padding: 0 16px;
 `;
 
@@ -65,6 +76,7 @@ const Item = styled.li`
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
+  cursor: pointer;
 `;
 
 const Image = styled.img`

@@ -1,42 +1,81 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { categoryTabs, newsData } from './data';
+import { newsData } from '../constants';
 
-// TODO: 추후 API 연동
+// import useNews from '../hooks/useNews';
+// import LoadingSpinner from '@/common/components/spinner';
+
+// interface NewsSectionProps {
+//   calendarId: string;
+// }
+
 const NewsSection = () => {
+  // TODO: API 연동 후 주석 해제
+  // const NewsSection = ({ calendarId }: NewsSectionProps) => {
+  // const { data: newsData, isLoading, isError, error } = useNews(calendarId);
+
   const [activeTab, setActiveTab] = useState(0);
+
+  const categoryTabs = newsData.itemList.map((news) => news.category);
+
+  const sortedNews = categoryTabs.map((category: string) =>
+    newsData.itemList.find((news) => news.category === category),
+  );
+
+  // TODO: API 연동 후 주석 해제
+  // if (isLoading) {
+  //   // TODO: 추후 로딩 페이지 추가
+  //   return <LoadingSpinner />;
+  // }
+  // if (isError || !newsData.itemList || newsData.itemList.length === 0) {
+  //   const errorMessage = error?.message || '뉴스 데이터를 가져오는 중 문제가 발생했습니다.';
+  //   return (
+  //     <Section>
+  //       <p>{errorMessage}</p>
+  //     </Section>
+  //   );
+  // }
 
   return (
     <section>
       <MenuBar>
-        {categoryTabs.map((tab, index) => (
-          <Tab key={index} active={activeTab === index} onClick={() => setActiveTab(index)}>
+        {categoryTabs.map((tab: string, index: number) => (
+          <Tab key={index} className={activeTab === index ? 'active' : ''} onClick={() => setActiveTab(index)}>
             {tab}
           </Tab>
         ))}
       </MenuBar>
       <TextWrapper>
-        <Title>{newsData[activeTab].title}</Title>
-        <Description>{newsData[activeTab].description}</Description>
-        <MoreButton>자세히 보기</MoreButton>
+        <Title>{sortedNews[activeTab]?.title}</Title>
+        <Description>{sortedNews[activeTab]?.content}</Description>
+        <MoreButton onClick={() => window.open(sortedNews[activeTab]?.url, '_blank')}>자세히 보기</MoreButton>
       </TextWrapper>
     </section>
   );
 };
+
+// const Section = styled.section`
+//   padding: 0 16px;
+// `;
 
 const MenuBar = styled.ul`
   display: flex;
   margin: 0 16px;
 `;
 
-const Tab = styled.li<{ active?: boolean }>`
+const Tab = styled.li`
   flex: 1;
   padding: 16px 0 13px 0;
-  max-width: calc(100% / 4);
-  border-bottom: 3px solid ${({ active, theme }) => (active ? theme.themeColors.secondary : theme.colors.gray)};
+  border-bottom: 3px solid ${({ theme }) => theme.colors.gray};
   ${({ theme }) => theme.typography.label.bold};
   text-align: center;
-  color: ${({ active, theme }) => (active ? theme.themeColors.textPrimary : theme.themeColors.textSecondary)};
+  color: ${({ theme }) => theme.themeColors.textSecondary};
+  cursor: pointer;
+
+  &.active {
+    border-color: ${({ theme }) => theme.themeColors.secondary};
+    color: ${({ theme }) => theme.themeColors.textPrimary};
+  }
 `;
 
 const TextWrapper = styled.div`
@@ -62,6 +101,7 @@ const MoreButton = styled.button`
   background-color: ${({ theme }) => theme.colors.orange200};
   border-radius: 4px;
   ${({ theme }) => theme.typography.label.bold};
+  cursor: pointer;
 `;
 
 export default NewsSection;

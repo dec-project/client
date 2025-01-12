@@ -1,41 +1,40 @@
 import styled from 'styled-components';
-import { musicSummary } from '../types';
-import { DEFAULT_IMAGE } from './data';
 import ArrowRight from '@/common/assets/icon/icon-arrow-right.svg';
 import useMusic from '../hooks/useMusic';
 import LoadingSpinner from '@/common/components/spinner';
+// import SkeletonItem from './SkeletonItem';
 
 interface MusicChartProps {
   calendarId: string;
 }
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const MusicChart = ({ calendarId }: MusicChartProps) => {
-  const { data: musicData, isLoading, isError } = useMusic(calendarId);
+  const { data: musicData, isLoading, isError, error } = useMusic(calendarId);
 
   if (isLoading) {
     // TODO: 추후 로딩 페이지 추가
     return <LoadingSpinner />;
   }
 
-  if (isError || !musicData.songSummaries) {
-    // TODO: 추후 에러 컴포넌트 추가
-    return <div>노래 데이터를 가져오는 중 문제가 발생했습니다.</div>;
+  if (isError || !musicData?.songSummaries || musicData.songSummaries.length === 0) {
+    const errorMessage = error?.message || '노래 데이터를 가져오는 중 문제가 발생했습니다.';
+
+    return (
+      <Section>
+        <p>{errorMessage}</p>
+      </Section>
+    );
   }
 
   return (
     <Section>
       <SectionHeader>노래 TOP 5</SectionHeader>
       <ItemList>
-        {musicData.songSummaries.map((item: musicSummary) => (
+        {musicData.songSummaries.map((item) => (
           <Item key={item.songId}>
-            <Image
-              src={item.imgUrl}
-              alt={`music-${item.songId}`}
-              // TODO: 임시 기본 이미지
-              onError={(e) => {
-                e.currentTarget.src = DEFAULT_IMAGE;
-              }}
-            />
+            <Image src={`${BASE_URL}/${item.imgUrl}`} alt={`music-${item.songId}`} />
             <ContentWrapper>
               <ContentTitle>
                 {item.ranking}. {item.title}

@@ -36,29 +36,35 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   border: none;
-  padding: 16px 8px;
+  padding: 16px 16px 8px;
   width: 100%;
   height: 72px;
   background-color: ${({ theme }) => theme.themeColors.background};
   max-width: var(--max-width);
   min-width: var(--min-width);
+  background-color: ${({ theme }) => theme.themeColors.background};
 `;
 
 const Left = styled.div`
   display: flex;
   align-items: top;
-  gap: 1rem;
-  span {
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  & > span {
+    margin-left: 24px;
     ${({ theme }) => theme.typography.title3.bold}
   }
 `;
 
-const Right = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const Right = styled.div``;
 
 const Icon = styled.div`
+  display: flex;
+  align-items: center;
   cursor: pointer;
 `;
 

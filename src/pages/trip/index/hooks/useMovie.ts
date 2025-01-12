@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import api from '@/common/apis/api';
+import { tripApi } from '@/common/apis/trip';
 
-const useMovie = (calendarId?: string) => {
+const useMovie = (calendarId: string) => {
   const query = useQuery({
     queryKey: ['movies', calendarId],
-    queryFn: () => api.get(`/search/${calendarId}/movies`),
+    queryFn: () => tripApi.getMovie(calendarId),
     enabled: !!calendarId,
   });
 
