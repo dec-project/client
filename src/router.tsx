@@ -27,7 +27,7 @@ const routes: routeElement[] = [
     ],
   },
   { path: '/trip/:calendarId', element: <TripPage /> },
-  { path: '/trip/:id/detail', element: <TripDetailPage /> },
+  { path: '/trip/:calendarId/detail', element: <TripDetailPage /> },
 ];
 
 export const router = createBrowserRouter(routes);
