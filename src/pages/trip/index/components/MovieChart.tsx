@@ -12,7 +12,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MovieChart = ({ calendarId }: MovieChartProps) => {
   const navigate = useNavigate();
-
   const { data: movieData, isLoading, isError, error } = useMovie(calendarId);
 
   if (isLoading) {
@@ -30,8 +29,8 @@ const MovieChart = ({ calendarId }: MovieChartProps) => {
     );
   }
 
-  const handleDetailClick = (movieId: number) => {
-    navigate(`/trip/${movieId}/detail`);
+  const handleDetail = (movieId: number) => {
+    navigate(`/trip/${calendarId}/detail?movieId=${movieId}`);
   };
 
   return (
@@ -39,7 +38,7 @@ const MovieChart = ({ calendarId }: MovieChartProps) => {
       <SectionHeader>영화 TOP 5</SectionHeader>
       <ItemList>
         {movieData.itemList.map((item) => (
-          <Item key={item.movieId} onClick={() => handleDetailClick(item.movieId)}>
+          <Item key={item.movieId} onClick={() => handleDetail(item.movieId)}>
             <Image src={`${BASE_URL}/${item.img}`} alt={`movie-${item.movieId}`} />
             <ContentWrapper>
               <ContentTitle>

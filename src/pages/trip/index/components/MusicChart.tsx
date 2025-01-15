@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ArrowRight from '@/common/assets/icon/icon-arrow-right.svg';
 import useMusic from '../hooks/useMusic';
 import LoadingSpinner from '@/common/components/spinner';
-// import SkeletonItem from './SkeletonItem';
+import { useNavigate } from 'react-router-dom';
 
 interface MusicChartProps {
   calendarId: string;
@@ -11,6 +11,7 @@ interface MusicChartProps {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MusicChart = ({ calendarId }: MusicChartProps) => {
+  const navigate = useNavigate();
   const { data: musicData, isLoading, isError, error } = useMusic(calendarId);
 
   if (isLoading) {
@@ -28,12 +29,16 @@ const MusicChart = ({ calendarId }: MusicChartProps) => {
     );
   }
 
+  const handleDetail = (musicId: number) => {
+    navigate(`/trip/${calendarId}/detail?musicId=${musicId}`);
+  };
+
   return (
     <Section>
       <SectionHeader>노래 TOP 5</SectionHeader>
       <ItemList>
         {musicData.songSummaries.map((item) => (
-          <Item key={item.songId}>
+          <Item key={item.songId} onClick={() => handleDetail(item.songId)}>
             <Image src={`${BASE_URL}${item.imgUrl}`} alt={`music-${item.songId}`} />
             <ContentWrapper>
               <ContentTitle>
