@@ -6,7 +6,7 @@ import ChatsPage from './pages/chats/index';
 import TripPage from './pages/trip/index';
 import Navbar from './common/components/navbar';
 import MyPage from './pages/my/index';
-import TripDetailPage from './pages/trip/detail/index';
+import TripDetailPage from './pages/trip/detail';
 import ChatRoom from './pages/chats/room';
 import LoginPage from './pages/auth/login';
 import CallbackPage from './pages/auth/callback';
