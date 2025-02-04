@@ -3,6 +3,7 @@ export interface KeywordRankingResponse {
 }
 
 export interface KeywordRanking {
+  chatroomId: number;
   calendarId: number;
   calendarDate: number;
   calendarName: string;
@@ -12,7 +13,7 @@ export interface KeywordRanking {
 }
 
 export interface ChatRanking {
-  roomId: number;
+  chatroomId: number;
   name: string;
   lastMessageDate: string;
   imgUrl: string;

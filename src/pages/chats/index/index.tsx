@@ -4,11 +4,14 @@ import styled from 'styled-components';
 import Layout from './components/Layout';
 import { useNavigate } from 'react-router-dom';
 import { convertDate } from './utils/convertDate';
+import { useAuthStore } from '@/common/stores/useAuthStore';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Chats = () => {
   const navigate = useNavigate();
+  const isLogin = useAuthStore.getState().isLogin();
+
   const { data: chatListData, isLoading, isError, error } = useChatList();
 
   if (isLoading) {
@@ -24,14 +27,18 @@ const Chats = () => {
     );
   }
 
-  const onClickChat = ({ roomId, roomName }: { roomId: number; roomName: String }) => {
-    navigate(`/chats/${roomId}/${roomName}`);
+  const onClickChat = ({ chatroomId, roomName }: { chatroomId: number; roomName: String }) => {
+    if (!isLogin) {
+      navigate('/login');
+    } else {
+      navigate(`/chats/${chatroomId}/${roomName}`);
+    }
   };
 
   return (
     <Layout>
       {chatListData.map((chat) => (
-        <Item key={chat.roomId} onClick={() => onClickChat({ roomId: chat.roomId, roomName: chat.name })}>
+        <Item key={chat.chatroomId} onClick={() => onClickChat({ chatroomId: chat.chatroomId, roomName: chat.name })}>
           <Img src={`${BASE_URL}${chat.imgUrl}`} alt="avatar" />
           <Details>
             <div>
